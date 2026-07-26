@@ -228,18 +228,21 @@
     };
 
     fetch("https://script.google.com/macros/s/AKfycbxPRloN2zUsOI-XZXvwj3vxi2qjZy-gaqrmcJDq9fd27idqGQgyLLN9RRbKFM5dJk3A/exec", {
-        method: "POST",
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data);
-        alert("Entry logged successfully");
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Error submitting entry");
-    });
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+})
+.then(res => res.json())
+.then(data => {
+    console.log(data);
+    alert("Entry logged successfully");
+})
+.catch(err => {
+    console.error(err);
+    alert("Error submitting entry");
+});
 }
 </script>
 
