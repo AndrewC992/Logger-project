@@ -226,6 +226,24 @@
         console.log("Submitting:", payload);
 
         alert("Task logged!");
+        try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbwkXFm96e0J4RuDuQ_-0dntK5kVZ5yhtUkzLWSmhI95Y-x11FXZ2x7GwuG3izfXQZKbEQ/exec", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+
+        if (result.status === "success") {
+            alert("Entry submitted successfully!");
+        } else {
+            alert("Error: " + result.message);
+        }
+
+    } catch (err) {
+        alert("Network error: " + err);
+    }
     }
 </script>
 
