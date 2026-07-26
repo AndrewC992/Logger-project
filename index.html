@@ -217,21 +217,30 @@
 
     // Submit form
     function submitForm() {
-        const payload = {
-            date: new Date().toISOString(),
-            task: document.getElementById("task").value,
-            nowo: document.getElementById("nowo").value || "TBD",
-            asset: document.getElementById("asset").value,
-            template: document.getElementById("template").value,
-            iaw: document.getElementById("iaw").value || "TBD",
-            inspector: document.getElementById("inspector").value,
-            hours: document.getElementById("hours").value
-        };
+    const payload = {
+        task: document.getElementById("task").value,
+        nowo: document.getElementById("nowo").value,
+        asset: document.getElementById("asset").value,
+        template: document.getElementById("template").value,
+        iaw: document.getElementById("iaw").value,
+        inspector: document.getElementById("inspector").value,
+        hours: document.getElementById("hours").value
+    };
 
-        console.log("Submitting:", payload);
-
-        alert("Task logged!");
-    }
+    fetch("https://script.google.com/macros/s/AKfycbxPRloN2zUsOI-XZXvwj3vxi2qjZy-gaqrmcJDq9fd27idqGQgyLLN9RRbKFM5dJk3A/exec", {
+        method: "POST",
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+        alert("Entry logged successfully");
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error submitting entry");
+    });
+}
 </script>
 
 </body>
