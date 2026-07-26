@@ -216,35 +216,34 @@
     });
 
     // Submit form
-   async function submitForm() {
-    const payload = {
-        task: document.getElementById("task").value,
-        nowo: document.getElementById("nowo").value,
-        asset: document.getElementById("asset").value,
-        template: document.getElementById("template").value,
-        iaw: document.getElementById("iaw").value,
-        inspector: document.getElementById("inspector").value,
-        hours: document.getElementById("hours").value
-    };
+    async function submitForm() {
+        const payload = {
+            task: document.getElementById("task").value,
+            nowo: document.getElementById("nowo").value,
+            asset: document.getElementById("asset").value,
+            template: document.getElementById("template").value,
+            iaw: document.getElementById("iaw").value,
+            inspector: document.getElementById("inspector").value,
+            hours: document.getElementById("hours").value
+        };
 
-    try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbwFHdzmJMcob5GpTFyVoRAx4tbMcVFG-fnFx4ntcmKskmJ5DOY2fzSsbkBsqYkjO-GL/exec")
-            {
-, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
+        try {
+            const res = await fetch("https://script.google.com/macros/s/AKfycbwFHdzmJMcob5GpTFyVoRAx4tbMcVFG-fnFx4ntcmKskmJ5DOY2fzSsbkBsqYkjO-GL/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
 
-        const data = await res.json();
-        console.log(data);
-        alert("Entry logged successfully");
-    } catch (err) {
-        console.error(err);
-        alert("Error submitting entry");
+            const data = await res.json();
+            console.log(data);
+            alert("Entry logged successfully");
+        } catch (err) {
+            console.error(err);
+            alert("Error submitting entry");
+        }
     }
-}
 </script>
+
 
 
 </body>
