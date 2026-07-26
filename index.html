@@ -62,7 +62,7 @@
         border: none;
         border-radius: 6px;
         margin-top: 10px;
-    
+    }    
 
     /* Autosuggest dropdown */
     #suggestions {
@@ -216,7 +216,7 @@
     });
 
     // Submit form
-    function submitForm() {
+   async function submitForm() {
     const payload = {
         task: document.getElementById("task").value,
         nowo: document.getElementById("nowo").value,
@@ -227,23 +227,22 @@
         hours: document.getElementById("hours").value
     };
 
-    fetch("https://script.google.com/macros/s/AKfycbwFHdzmJMcob5GpTFyVoRAx4tbMcVFG-fnFx4ntcmKskmJ5DOY2fzSsbkBsqYkjO-GL/exec", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-})
-.then(res => res.json())
-.then(data => {
-    console.log(data);
-    alert("Entry logged successfully");
-})
-.catch(err => {
-    console.error(err);
-    alert("Error submitting entry");
-});
+    try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbwFHdzmJMcob5GpTFyVoRAx4tbMcVFG-fnFx4ntcmKskmJ5DOY2fzSsbkBsqYkjO-GL/exec", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        console.log(data);
+        alert("Entry logged successfully");
+    } catch (err) {
+        console.error(err);
+        alert("Error submitting entry");
+    }
 }
+
 </script>
 
 </body>
