@@ -3,257 +3,123 @@
 <head>
 <meta charset="UTF-8">
 <title>Aero Maint Logger</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        font-size: 15px;
-        margin: 0;
-        padding: 15px;
-        background: #f4f4f4;
-    }
-
-    h2 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .form-group {
-        margin-bottom: 18px;
-    }
-
-    label {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 6px;
-    }
-
-    input, select, textarea {
-        width: 100%;
-        padding: 10px;
-        font-size: 15px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-    }
-
-    textarea {
-        height: 80px;
-    }
-
-    .hours-buttons button {
-        padding: 10px 14px;
-        margin-right: 10px;
-        margin-bottom: 10px;
-        font-size: 15px;
-        border-radius: 6px;
-        border: none;
-        background: #007bff;
-        color: white;
-    }
-
-    #submitBtn {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        background: #28a745;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        margin-top: 10px;
-    }    
-
-    /* Autosuggest dropdown */
-    #suggestions {
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        margin-top: -10px;
-        margin-bottom: 10px;
-        display: none;
-        position: relative;
-        z-index: 10;
-    }
-
-    #suggestions div {
-        padding: 10px;
-        cursor: pointer;
-    }
-
-    #suggestions div:hover {
-        background: #eaeaea;
-    }
+    body { font-family: Arial; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; }
+    th { background: #eee; }
+    input { margin: 5px; padding: 5px; }
 </style>
 </head>
 
 <body>
 
-<h2>Aero Maint Logger</h2>
+<h2>Aero Maintenance Logger</h2>
 
-<form id="taskForm">
-
-    <!-- Task -->
-    <div class="form-group">
-        <label>Task</label>
-        <input type="text" id="task" autocomplete="off">
-        <div id="suggestions"></div>
-    </div>
-
-    <!-- NO/WO -->
-    <div class="form-group">
-        <label>NO/WO (optional)</label>
-        <input type="text" id="nowo" placeholder="TBD if unknown">
-    </div>
-
-    <!-- Asset -->
-    <div class="form-group">
-    <label>Asset</label>
-    <input list="assetList" id="asset" placeholder="Type or select">
-    <datalist id="assetList">
-        <option value="142803">
-        <option value="142804">
-        <option value="142805">
-        <option value="142806">
-    </datalist>
+<!-- FORM -->
+<div>
+    <label>Task: <input id="task"></label>
+    <label>NO/WO: <input id="no_wo"></label>
+    <label>Registration: <input id="registration"></label>
+    <label>Template: <input id="template"></label>
+    <label>IAW: <input id="iaw"></label>
+    <label>Inspector/Lvl A/C: <input id="inspector"></label>
+    <label>Hours: <input id="hours"></label>
+    <button id="submit">Submit</button>
 </div>
 
-    <!-- Template -->
-    <div class="form-group">
-    <label>Template</label>
-    <input list="templateList" id="template" placeholder="Type or select">
-    <datalist id="templateList">
-        <option value="DHC8-100">
-        <option value="PW120A"> <!-- New option -->
-    </datalist>
-</div>
-
-    <!-- IAW -->
-    <div class="form-group">
-        <label>IAW (optional)</label>
-        <input type="text" id="iaw" placeholder="TBD if unknown">
-    </div>
-
-    <!-- Inspector -->
-    <div class="form-group">
-    <label>Inspector / Lvl A/C</label>
-    <input list="inspectors" id="inspector" placeholder="Type or select">
-    <datalist id="inspectors">
-        <option value="Hutchins">
-        <option value="Huang">
-        <option value="Williams">
-        <option value="Cuenca">
-        <option value="Josh No">
-        <option value="Corrin">
-    </datalist>
-</div>
-
-    <!-- Hours -->
-    <div class="form-group">
-        <label>Hours</label>
-        <div class="hours-buttons">
-            <button type="button" onclick="setHours(0.5)">0.5</button>
-            <button type="button" onclick="setHours(1)">1.0</button>
-            <button type="button" onclick="setHours(2)">2.0</button>
-            <button type="button" onclick="setHours(3)">3.0</button>
-        </div>
-        <input type="number" id="hours" step="0.1" placeholder="Custom hours">
-    </div>
-
-    <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
-
-</form>
+<!-- TABLE -->
+<table id="logTable">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Task</th>
+            <th>NO/WO</th>
+            <th>Registration</th>
+            <th>Template</th>
+            <th>IAW</th>
+            <th>Inspector/Lvl A/C</th>
+            <th>Hours</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 
 <script>
-   function formatDateDDMMYYYY() {
+// ----------------------
+// DATE FORMATTER
+// ----------------------
+function formatDateDDMMYYYY() {
     const now = new Date();
     const day = String(now.getDate()).padStart(2, "0");
-    const month = String(now.getMonth() + 1).padStart(2, "0"); 
+    const month = String(now.getMonth() + 1).padStart(2, "0");
     const year = now.getFullYear();
     return `${day} ${month} ${year}`;
 }
 
-    // Placeholder IAW index (replace with backend-loaded data)
-    const iawIndex = [
-        { task: "Engine #1 Preservation Humidity Check", iaw: "C-14-106-000/MN-000 Ch: 72-00-00 Pg 326" },
-        { task: "Engine #2 Preservation Humidity Check", iaw: "C-14-106-000/MN-000 Ch: 72-00-00 Pg 326" },
-        { task: "FS FOD Check Cannon plug hardware", iaw: "P-05-005-P04/AM-002 P04-2-33 MRN13" },
-        { task: "Rh ob Wheel assy R&I", iaw: "C-12-142-000/MF-002 ch32-41-11" },
-        { task: "Rh ob MLG brake assy R&I", iaw: "C-12-142-000/MF-002 ch32-42-11" }
-    ];
+// ----------------------
+// LOAD CSV FROM GITHUB
+// ----------------------
+async function loadCSV() {
+    const url = "https://raw.githubusercontent.com/AndrewC992/Logger-project/main/AeroMaintLog.csv";
+    const res = await fetch(url);
+    const text = await res.text();
 
-    // Hours quick buttons
-    function setHours(val) {
-        document.getElementById("hours").value = val;
-    }
+    const rows = text.split("\n").map(r => r.split(","));
+    const headers = rows[0];
 
-    // Autosuggest logic
-    const taskInput = document.getElementById("task");
-    const suggestionsBox = document.getElementById("suggestions");
+    const tbody = document.querySelector("#logTable tbody");
+    tbody.innerHTML = "";
 
-    taskInput.addEventListener("input", () => {
-        const query = taskInput.value.toLowerCase();
-        suggestionsBox.innerHTML = "";
+    for (let i = 1; i < rows.length; i++) {
+        const r = rows[i];
+        if (r.length < 8) continue;
 
-        if (!query) {
-            suggestionsBox.style.display = "none";
-            return;
-        }
-
-        const matches = iawIndex.filter(entry =>
-            entry.task.toLowerCase().includes(query)
-        );
-
-        if (matches.length === 0) {
-            suggestionsBox.style.display = "none";
-            return;
-        }
-
-        matches.forEach(entry => {
-            const div = document.createElement("div");
-            div.textContent = `${entry.task} — ${entry.iaw}`;
-            div.onclick = () => {
-                taskInput.value = entry.task;
-                document.getElementById("iaw").value = entry.iaw;
-                suggestionsBox.style.display = "none";
-            };
-            suggestionsBox.appendChild(div);
+        const tr = document.createElement("tr");
+        r.forEach(cell => {
+            const td = document.createElement("td");
+            td.textContent = cell;
+            tr.appendChild(td);
         });
+        tbody.appendChild(tr);
+    }
+}
 
-        suggestionsBox.style.display = "block";
+// ----------------------
+// SUBMIT HANDLER
+// ----------------------
+document.getElementById("submit").addEventListener("click", () => {
+
+    const entry = {
+        date: formatDateDDMMYYYY(),
+        task: document.getElementById("task").value,
+        no_wo: document.getElementById("no_wo").value,
+        registration: document.getElementById("registration").value,
+        template: document.getElementById("template").value,
+        iaw: document.getElementById("iaw").value,
+        inspector: document.getElementById("inspector").value,
+        hours: document.getElementById("hours").value
+    };
+
+    // Add to table immediately
+    const tbody = document.querySelector("#logTable tbody");
+    const tr = document.createElement("tr");
+
+    Object.values(entry).forEach(v => {
+        const td = document.createElement("td");
+        td.textContent = v;
+        tr.appendChild(td);
     });
 
-    // Submit form
-    async function submitForm() {
-       const entry = {
-    date: formatDateDDMMYYYY(),
-    task: row["Task"],
-    no_wo: row["NO/WO"],
-    registration: row["Registration"],
-    template: row["Template"],
-    iaw: row["IAW"],
-    inspector: row["Inspector/Lvl A/C"],
-    hours: row["Hours"]
-};
+    tbody.appendChild(tr);
 
-        try {
-            const res = await fetch("https://script.google.com/macros/s/AKfycbwFHdzmJMcob5GpTFyVoRAx4tbMcVFG-fnFx4ntcmKskmJ5DOY2fzSsbkBsqYkjO-GL/exec", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
+    console.log("Entry created:", entry);
+    alert("Entry added (local only). To save to Google Sheets, backend required.");
+});
 
-            const data = await res.json();
-            console.log(data);
-            alert("Entry logged successfully");
-        } catch (err) {
-            console.error(err);
-            alert("Error submitting entry");
-        }
-    }
+// Load existing CSV on page load
+loadCSV();
 </script>
-
-
 
 </body>
 </html>
