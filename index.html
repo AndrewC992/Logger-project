@@ -210,6 +210,7 @@
     // Submit form
    async function submitForm() {
     const payload = {
+        date: formatDateDDMMYYYY(),
         task: document.getElementById("task").value,
         nowo: document.getElementById("nowo").value,
         asset: document.getElementById("asset").value,
@@ -220,20 +221,25 @@
     };
 
     try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbwkXFm96e0J4RuDuQ_-0dntK5kVZ5yhtUkzLWSmhI95Y-x11FXZ2x7GwuG3izfXQZKbEQ/exec", {
+        const res = await fetch("YOUR_WEB_APP_URL", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         });
 
-        const data = await res.json();
-        console.log(data);
-        alert("Entry logged successfully");
+        const result = await res.json();
+
+        if (result.status === "success") {
+            alert("Entry submitted successfully!");
+        } else {
+            alert("Error: " + result.message);
+        }
+
     } catch (err) {
-        console.error(err);
-        alert("Error submitting entry");
+        alert("Network error: " + err);
     }
 }
+e
 </script>
 </body>
 </html>
