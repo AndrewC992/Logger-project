@@ -8,7 +8,6 @@
 <style>
     body {
         font-family: Arial, sans-serif;
-        font-size: 15px;
         margin: 0;
         padding: 15px;
         background: #f4f4f4;
@@ -31,8 +30,8 @@
 
     input, select, textarea {
         width: 100%;
-        padding: 10px;
-        font-size: 15px;
+        padding: 12px;
+        font-size: 16px;
         border-radius: 6px;
         border: 1px solid #ccc;
         box-sizing: border-box;
@@ -43,10 +42,10 @@
     }
 
     .hours-buttons button {
-        padding: 10px 14px;
+        padding: 12px 18px;
         margin-right: 10px;
         margin-bottom: 10px;
-        font-size: 15px;
+        font-size: 16px;
         border-radius: 6px;
         border: none;
         background: #007bff;
@@ -55,14 +54,14 @@
 
     #submitBtn {
         width: 100%;
-        padding: 10px;
-        font-size: 16px;
+        padding: 15px;
+        font-size: 18px;
         background: #28a745;
         color: white;
         border: none;
         border-radius: 6px;
         margin-top: 10px;
-    }    
+    }
 
     /* Autosuggest dropdown */
     #suggestions {
@@ -92,65 +91,58 @@
 <h2>Aero Maint Logger</h2>
 
 <form id="taskForm">
-	<!--Date-->
-	<div class="form-group">
-		<label>Date</label>
-		<input type="text" id="datefield" placeholder="Date">
-		
+
     <!-- Task -->
     <div class="form-group">
         <label>Task</label>
         <input type="text" id="task" autocomplete="off">
         <div id="suggestions"></div>
     </div>
-	
+
     <!-- NO/WO -->
     <div class="form-group">
         <label>NO/WO (optional)</label>
         <input type="text" id="nowo" placeholder="TBD if unknown">
     </div>
-	
+
     <!-- Asset -->
     <div class="form-group">
-    <label>Asset</label>
-    <input list="assetList" id="asset" placeholder="Type or select">
-    <datalist id="assetList">
-        <option value="142803">
-        <option value="142804">
-        <option value="142805">
-        <option value="142806">
-    </datalist>
-</div>
+        <label>Asset</label>
+        <select id="asset">
+            <option value="142803">142803</option>
+            <option value="142806">142806</option>
+            <option value="142807">142807</option>
+            <option value="142808">142808</option>
+            <option value="Engine Serial">Engine Serial</option>
+            <option value="Component">Off-Aircraft Component</option>
+            <option value="General Shop Work">General Shop Work</option>
+        </select>
+    </div>
 
     <!-- Template -->
     <div class="form-group">
-    <label>Template</label>
-    <input list="templateList" id="template" placeholder="Type or select">
-    <datalist id="templateList">
-        <option value="DHC8-100">
-        <option value="PW120A">
-    </datalist>
-</div>
+        <label>Template</label>
+        <input type="text" id="template" value="DHC8-100">
+    </div>
 
     <!-- IAW -->
     <div class="form-group">
         <label>IAW (optional)</label>
         <input type="text" id="iaw" placeholder="TBD if unknown">
     </div>
-	
+
     <!-- Inspector -->
     <div class="form-group">
-    <label>Inspector / Lvl A/C</label>
-    <input list="inspectors" id="inspector" placeholder="Type or select">
-    <datalist id="inspectors">
-        <option value="Hutchins">
-        <option value="Huang">
-        <option value="Williams">
-        <option value="Cuenca">
-        <option value="Josh No">
-        <option value="Corrin">
-    </datalist>
-</div>
+        <label>Inspector / Lvl A/C</label>
+        <select id="inspector">
+            <option value="Hutchins">Hutchins</option>
+            <option value="Huang">Huang</option>
+            <option value="Williams">Williams</option>
+            <option value="Cuenca">Cuenca</option>
+            <option value="Josh No">Josh No</option>
+            <option value="Corrin">Corrin</option>
+        </select>
+    </div>
 
     <!-- Hours -->
     <div class="form-group">
@@ -159,12 +151,12 @@
             <button type="button" onclick="setHours(0.5)">0.5</button>
             <button type="button" onclick="setHours(1)">1.0</button>
             <button type="button" onclick="setHours(2)">2.0</button>
-            <button type="button" onclick="setHours(3)">3.0</button>
         </div>
         <input type="number" id="hours" step="0.1" placeholder="Custom hours">
     </div>
 
     <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
+
 </form>
 
 <script>
@@ -219,42 +211,23 @@
     });
 
     // Submit form
-	function addEntry() {
-    console.log("Submit clicked");
-    // your real logic here
-}
-   async function submitForm() {
-    const payload = {
-        date: formatDateDDMMYYYY(),
-        task: document.getElementById("task").value,
-        nowo: document.getElementById("nowo").value,
-        asset: document.getElementById("asset").value,
-        template: document.getElementById("template").value,
-        iaw: document.getElementById("iaw").value,
-        inspector: document.getElementById("inspector").value,
-        hours: document.getElementById("hours").value
-    };
+    function submitForm() {
+        const payload = {
+            date: new Date().toISOString(),
+            task: document.getElementById("task").value,
+            nowo: document.getElementById("nowo").value || "TBD",
+            asset: document.getElementById("asset").value,
+            template: document.getElementById("template").value,
+            iaw: document.getElementById("iaw").value || "TBD",
+            inspector: document.getElementById("inspector").value,
+            hours: document.getElementById("hours").value
+        };
 
-    try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbwkXFm96e0J4RuDuQ_-0dntK5kVZ5yhtUkzLWSmhI95Y-x11FXZ2x7GwuG3izfXQZKbEQ/exec", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
+        console.log("Submitting:", payload);
 
-        const result = await res.json();
-
-        if (result.status === "success") {
-            alert("Entry submitted successfully!");
-        } else {
-            alert("Error: " + result.message);
-        }
-
-    } catch (err) {
-        alert("Network error: " + err);
+        alert("Task logged!");
     }
-}
-e
 </script>
+
 </body>
 </html>
