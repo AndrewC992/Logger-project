@@ -92,17 +92,24 @@
 <h2>Aero Maint Logger</h2>
 
 <form id="taskForm">
+	<!--Date-->
+	<div class="form-group">
+		<label>Date</label>
+		<input type="text" id="datefield" placeholder="Date">
+		
     <!-- Task -->
     <div class="form-group">
         <label>Task</label>
         <input type="text" id="task" autocomplete="off">
         <div id="suggestions"></div>
     </div>
+	
     <!-- NO/WO -->
     <div class="form-group">
         <label>NO/WO (optional)</label>
         <input type="text" id="nowo" placeholder="TBD if unknown">
     </div>
+	
     <!-- Asset -->
     <div class="form-group">
     <label>Asset</label>
@@ -114,6 +121,7 @@
         <option value="142806">
     </datalist>
 </div>
+
     <!-- Template -->
     <div class="form-group">
     <label>Template</label>
@@ -123,11 +131,13 @@
         <option value="PW120A">
     </datalist>
 </div>
+
     <!-- IAW -->
     <div class="form-group">
         <label>IAW (optional)</label>
         <input type="text" id="iaw" placeholder="TBD if unknown">
     </div>
+	
     <!-- Inspector -->
     <div class="form-group">
     <label>Inspector / Lvl A/C</label>
@@ -141,6 +151,7 @@
         <option value="Corrin">
     </datalist>
 </div>
+
     <!-- Hours -->
     <div class="form-group">
         <label>Hours</label>
