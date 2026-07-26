@@ -108,23 +108,25 @@
 
     <!-- Asset -->
     <div class="form-group">
-        <label>Asset</label>
-        <select id="asset">
-            <option value="142803">142803</option>
-            <option value="142804">142806</option>
-            <option value="142805">142807</option>
-            <option value="142806">142808</option>
-            <option value="Engine Serial">Engine Serial</option>
-            <option value="Component">Off-Aircraft Component</option>
-            <option value="General Shop Work">General Shop Work</option>
-        </select>
-    </div>
+    <label>Asset</label>
+    <input list="assetList" id="asset" placeholder="Type or select">
+    <datalist id="assetList">
+        <option value="142803">
+        <option value="142804">
+        <option value="142805">
+        <option value="142806">
+    </datalist>
+</div>
 
     <!-- Template -->
     <div class="form-group">
-        <label>Template</label>
-        <input type="text" id="template" value="DHC8-100">
-    </div>
+    <label>Template</label>
+    <input list="templateList" id="template" placeholder="Type or select">
+    <datalist id="templateList">
+        <option value="DHC8-100">
+        <option value="PW120A"> <!-- New option -->
+    </datalist>
+</div>
 
     <!-- IAW -->
     <div class="form-group">
