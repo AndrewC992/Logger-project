@@ -228,7 +228,9 @@
     };
 
     try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbwFHdzmJMcob5GpTFyVoRAx4tbMcVFG-fnFx4ntcmKskmJ5DOY2fzSsbkBsqYkjO-GL/exec", {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbwFHdzmJMcob5GpTFyVoRAx4tbMcVFG-fnFx4ntcmKskmJ5DOY2fzSsbkBsqYkjO-GL/exec")
+            {
+, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
