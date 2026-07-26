@@ -156,7 +156,7 @@
     </div>
 
     <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
-
+<button onclick="addEntry()">Submit</button>
 </form>
 
 <script>
@@ -211,7 +211,6 @@
     });
 
     // Submit form
-    <button onclick="addEntry()">Submit</button>
     function submitForm() {
         const payload = {
             date: new Date().toISOString(),
