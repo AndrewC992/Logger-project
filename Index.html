@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Aero Maint Logger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 15px;
+        background: #f4f4f4;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        height: 80px;
+    }
+
+    .hours-buttons button {
+        padding: 12px 18px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: none;
+        background: #007bff;
+        color: white;
+    }
+
+    #submitBtn {
+        width: 100%;
+        padding: 15px;
+        font-size: 18px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        margin-top: 10px;
+    }
+
+    /* Autosuggest dropdown */
+    #suggestions {
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        margin-top: -10px;
+        margin-bottom: 10px;
+        display: none;
+        position: relative;
+        z-index: 10;
+    }
+
+    #suggestions div {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    #suggestions div:hover {
+        background: #eaeaea;
+    }
+</style>
+</head>
+
+<body>
+
+<h2>Aero Maint Logger</h2>
+
+<form id="taskForm">
+
+    <!-- Task -->
+    <div class="form-group">
+        <label>Task</label>
+        <input type="text" id="task" autocomplete="off">
+        <div id="suggestions"></div>
+    </div>
+
+    <!-- NO/WO -->
+    <div class="form-group">
+        <label>NO/WO (optional)</label>
+        <input type="text" id="nowo" placeholder="TBD if unknown">
+    </div>
+
+    <!-- Asset -->
+    <div class="form-group">
+        <label>Asset</label>
+        <select id="asset">
+            <option value="142803">142803</option>
+            <option value="142806">142806</option>
+            <option value="142807">142807</option>
+            <option value="142808">142808</option>
+            <option value="Engine Serial">Engine Serial</option>
+            <option value="Component">Off-Aircraft Component</option>
+            <option value="General Shop Work">General Shop Work</option>
+        </select>
+    </div>
+
+    <!-- Template -->
+    <div class="form-group">
+        <label>Template</label>
+        <input type="text" id="template" value="DHC8-100">
+    </div>
+
+    <!-- IAW -->
+    <div class="form-group">
+        <label>IAW (optional)</label>
+        <input type="text" id="iaw" placeholder="TBD if unknown">
+    </div>
+
+    <!-- Inspector -->
+    <div class="form-group">
+        <label>Inspector / Lvl A/C</label>
+        <select id="inspector">
+            <option value="Hutchins">Hutchins</option>
+            <option value="Huang">Huang</option>
+            <option value="Williams">Williams</option>
+            <option value="Cuenca">Cuenca</option>
+            <option value="Josh No">Josh No</option>
+            <option value="Corrin">Corrin</option>
+        </select>
+    </div>
+
+    <!-- Hours -->
+    <div class="form-group">
+        <label>Hours</label>
+        <div class="hours-buttons">
+            <button type="button" onclick="setHours(0.5)">0.5</button>
+            <button type="button" onclick="setHours(1)">1.0</button>
+            <button type="button" onclick="setHours(2)">2.0</button>
+        </div>
+        <input type="number" id="hours" step="0.1" placeholder="Custom hours">
+    </div>
+
+    <button id="submitBtn" type="button" onclick="submitForm()">Submit</button>
+
+</form>
+
+<script>
+    // Placeholder IAW index (replace with backend-loaded data)
+    const iawIndex = [
+        { task: "Engine #1 Preservation Humidity Check", iaw: "C-14-106-000/MN-000 Ch: 72-00-00 Pg 326" },
+        { task: "Engine #2 Preservation Humidity Check", iaw: "C-14-106-000/MN-000 Ch: 72-00-00 Pg 326" },
+        { task: "FS FOD Check Cannon plug hardware", iaw: "P-05-005-P04/AM-002 P04-2-33 MRN13" },
+        { task: "Rh ob Wheel assy R&I", iaw: "C-12-142-000/MF-002 ch32-41-11" },
+        { task: "Rh ob MLG brake assy R&I", iaw: "C-12-142-000/MF-002 ch32-42-11" }
+    ];
+
+    // Hours quick buttons
+    function setHours(val) {
+        document.getElementById("hours").value = val;
+    }
+
+    // Autosuggest logic
+    const taskInput = document.getElementById("task");
+    const suggestionsBox = document.getElementById("suggestions");
+
+    taskInput.addEventListener("input", () => {
+        const query = taskInput.value.toLowerCase();
+        suggestionsBox.innerHTML = "";
+
+        if (!query) {
+            suggestionsBox.style.display = "none";
+            return;
+        }
+
+        const matches = iawIndex.filter(entry =>
+            entry.task.toLowerCase().includes(query)
+        );
+
+        if (matches.length === 0) {
+            suggestionsBox.style.display = "none";
+            return;
+        }
+
+        matches.forEach(entry => {
+            const div = document.createElement("div");
+            div.textContent = `${entry.task} — ${entry.iaw}`;
+            div.onclick = () => {
+                taskInput.value = entry.task;
+                document.getElementById("iaw").value = entry.iaw;
+                suggestionsBox.style.display = "none";
+            };
+            suggestionsBox.appendChild(div);
+        });
+
+        suggestionsBox.style.display = "block";
+    });
+
+    // Submit form
+    function submitForm() {
+        const payload = {
+            date: new Date().toISOString(),
+            task: document.getElementById("task").value,
+            nowo: document.getElementById("nowo").value || "TBD",
+            asset: document.getElementById("asset").value,
+            template: document.getElementById("template").value,
+            iaw: document.getElementById("iaw").value || "TBD",
+            inspector: document.getElementById("inspector").value,
+            hours: document.getElementById("hours").value
+        };
+
+        console.log("Submitting:", payload);
+
+        alert("Task logged!");
+    }
+</script>
+
+</body>
+</html>
