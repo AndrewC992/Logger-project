@@ -165,6 +165,14 @@
 </form>
 
 <script>
+   function formatDateDDMMYYYY() {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0"); 
+    const year = now.getFullYear();
+    return `${day} ${month} ${year}`;
+}
+
     // Placeholder IAW index (replace with backend-loaded data)
     const iawIndex = [
         { task: "Engine #1 Preservation Humidity Check", iaw: "C-14-106-000/MN-000 Ch: 72-00-00 Pg 326" },
@@ -217,15 +225,16 @@
 
     // Submit form
     async function submitForm() {
-        const payload = {
-            task: document.getElementById("task").value,
-            nowo: document.getElementById("nowo").value,
-            asset: document.getElementById("asset").value,
-            template: document.getElementById("template").value,
-            iaw: document.getElementById("iaw").value,
-            inspector: document.getElementById("inspector").value,
-            hours: document.getElementById("hours").value
-        };
+       const entry = {
+    date: formatDateDDMMYYYY(),
+    task: row["Task"],
+    no_wo: row["NO/WO"],
+    registration: row["Registration"],
+    template: row["Template"],
+    iaw: row["IAW"],
+    inspector: row["Inspector/Lvl A/C"],
+    hours: row["Hours"]
+};
 
         try {
             const res = await fetch("https://script.google.com/macros/s/AKfycbwFHdzmJMcob5GpTFyVoRAx4tbMcVFG-fnFx4ntcmKskmJ5DOY2fzSsbkBsqYkjO-GL/exec", {
